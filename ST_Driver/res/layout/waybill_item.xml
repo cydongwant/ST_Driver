@@ -19,6 +19,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -36,6 +37,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -53,6 +55,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -70,6 +73,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/tell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -87,6 +91,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -104,15 +109,17 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
+    <TextView
+        android:id="@+id/statu_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/statu_bg"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/statu_bg" />
 
 </LinearLayout>

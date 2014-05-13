@@ -1,6 +1,8 @@
 package com.fragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.http.HttpEntity;
@@ -11,9 +13,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.adapter.TransportAdapter;
 import com.constant.Constant;
+import com.model.Transport;
 import com.ry.st.driver.R;
 import com.util.Connect;
 import com.util.Network;
@@ -33,12 +39,15 @@ public class TransportFrag extends Fragment {
 	ListView listView;
 	TransportAdapter adapter;
 	String URI_Transport = "/driver_apps/:uuid/transportation";
-    SharedPreferences sp;
+	SharedPreferences sp;
+	boolean loaded;
+	List<Transport> list = new ArrayList<Transport>();
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		sp = getActivity().getSharedPreferences("app",Context.MODE_PRIVATE);
+		sp = getActivity().getSharedPreferences("app", Context.MODE_PRIVATE);
 	}
 
 	@Override
@@ -47,7 +56,7 @@ public class TransportFrag extends Fragment {
 		// TODO Auto-generated method stub
 		View v = inflater.inflate(R.layout.transport, null);
 		listView = (ListView) v.findViewById(R.id.list);
-		adapter = new TransportAdapter(getActivity());
+		adapter = new TransportAdapter(getActivity(), list);
 		listView.setAdapter(adapter);
 		return v;
 	}
@@ -63,6 +72,7 @@ public class TransportFrag extends Fragment {
 		// TODO Auto-generated method stub
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
+			if (!loaded)
 			if (Network.isNetActive(getActivity())) {
 				new LoadDataTask().execute();
 			}
@@ -90,6 +100,7 @@ public class TransportFrag extends Fragment {
 				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 					HttpEntity entity = response.getEntity();
 					result = EntityUtils.toString(entity);
+				
 				}
 
 			} catch (ClientProtocolException e) {
@@ -106,9 +117,27 @@ public class TransportFrag extends Fragment {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			Log.d("cyd","post");
 			if (result != null) {
 				Log.d("cyd", result);
+				loaded = true;
+				try {
+					JSONArray array = new JSONArray(result);
+					for (int i = 0; i < array.length(); i++) {
+						Transport t = new Transport();
+						JSONObject obj = array.getJSONObject(i);
+						t.setId(obj.getJSONObject("transportation_info")
+								.getInt("id"));
+						t.setPosition(obj.getJSONObject("transportation_info")
+								.getString("position"));
+						t.setPubtime(obj.getJSONObject("transportation_info")
+								.getString("updated_at"));
+						list.add(t);
+					}
+					adapter.notifyDataSetChanged();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
